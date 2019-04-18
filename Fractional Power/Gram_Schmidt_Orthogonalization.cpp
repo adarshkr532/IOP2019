@@ -3,42 +3,16 @@ using namespace std;
  
 typedef long double f80;
 
-#define matrix vector<vector<f80>>
-
-void print(matrix A){
+void print(vector<vector<f80> > A){
 	int n = A.size();
 	for(int i = 0; i < n; i++){
-		for(int j = 0; j < n; j++){
-			if(fabs(A[i][j]) < 1e-9)
-				A[i][j] = 0;
+		for(int j = 0; j < n; j++)
 			cout << A[i][j] << " ";
-		}
 		cout << endl;
 	}
-	cout << endl;
 }
 
-matrix transpose(matrix A){
-	int n = A.size();
-	for(int i = 0; i < n; i++){
-		for(int j = i+1; j < n; j++)
-			swap(A[i][j], A[j][i]);
-	}
-	return A;
-}
-
-matrix multiply(matrix A, matrix B){
-	int n = A.size();
-	matrix C(n, vector<f80>(n, 0));
-	for(int k = 0; k < n; k++){
-		for(int i = 0; i < n; i++)
-			for(int j = 0; j < n; j++)
-				C[i][j] += A[i][k]*B[k][j];
-	}
-	return C;
-}
-
-matrix Gram_Schmidt(matrix A){
+vector<vector<f80> > Gram_Schmidt(vector<vector<f80> > &A){
 	int n = A.size();
 	for(int j = 0; j < n; j++){		//Gram-Schmidt's orthogonalisation
 		vector<f80> v;
@@ -65,9 +39,9 @@ matrix Gram_Schmidt(matrix A){
 }
 
 signed main() {
-//	freopen("input.txt","r",stdin);
+	freopen("input.txt","r",stdin);
 	int n;
-	matrix A;
+	vector<vector<f80> > A;
 	cout << "Enter size of matrix:\n";
 	cin >> n;
 	A.resize(n);
@@ -78,13 +52,8 @@ signed main() {
 			A[i].push_back(p);
 		}
 	}
-	int k = 30;
-	while(k--){
-		matrix Q = Gram_Schmidt(A);
-		matrix R = multiply(transpose(Q), A);
-		A = multiply(R, Q);
-	}
-	for(int i = 0; i < n; i++)
-		cout << A[i][i] << " ";
+	Gram_Schmidt(A);
+	cout << "Matrix after Gram_Schmidt's orthogonalization:\n";
+	print(A);
 	return 0;
 }
